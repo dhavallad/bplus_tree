@@ -179,6 +179,24 @@ public class BPlusTree<K extends Comparable<K>, V> {
 	public void delete(K key, V value) {
 		// please implement the body of this method so that we can remove key-value pairs from the tree (refer to page
 		// 498 in the text book).
+		// No element in the B + tree.
+		if (root == null) {
+			System.out.println("This B+ tree is empty !!");
+			return;
+		}
+		
+		LeafNode<K, V> leaf = find(key);
+		System.out.println("the current leaf node is : " + leaf.toString() + "----");
+		if (leaf.findIndexL(key) < 0) {
+			System.out.println("Key not found.!!");
+			return;
+		}
+		// delete the entry (key,value) pair from the leaf node l
+		delete_entry(leaf, key, value);
+	}
+	
+	private void delete_entry(LeafNode<K, V> l, K key, V value) {
+		
 	}
 
 }
