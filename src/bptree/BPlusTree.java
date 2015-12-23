@@ -177,34 +177,75 @@ public class BPlusTree<K extends Comparable<K>, V> {
 	 *            the value to delete.
 	 */
 	public void delete(K key, V value) {
-		// please implement the body of this method so that we can remove key-value pairs from the tree (refer to page
+// please implement the body of this method so that we can remove
+		// key-value pairs from the tree (refer to page
 		// 498 in the text book).
-		
-		LeafNode<K, V> leaf = find(key);
-		System.out.println("the current leaf node is : " + leaf.toString() + "----");
-		
-		// No element in the B + tree.
+		Node<K> leaf = find(key);
+		// if there is no element in the B + tree.
+
 		if (root == null) {
 			System.out.println("This B+ tree is empty !!");
 			return;
-		}
-		
-		if (leaf.findIndexL(key) < 0) {
-			System.out.println("Key not found.!!");
+		} else if (leaf.findIndexGE(key) < 0) {
+			System.out.println("This B+ tree doesn't contain value.");
 			return;
 		}
-		
-		// delete the entry pair from the leaf node leaf
-		delete_entry(leaf, key, value);
+		// find the leaf node L that could contain the (key,value) pair
+		/*
+		 * if (l.findIndexL(key) < 0) { System.out.println(
+		 * "This B+ tree doesn't contain value."); return; }
+		 */
+		// Delete entry
+		delete_key(leaf, key, value);
 	}
 	
-	private void delete_entry(LeafNode<K, V> l, K key, V value) {
-		// Deletion logic goes here....
-		NonLeafNode<K> parent = findParent(l);
-		Node<K> sib = parent.child(0);
-		int curIndex = l.findIndexGE(key);
-		l.keys[curIndex] = null;
-		l.numberOfKeys--;
+public void delete_key(Node<K> currentNode, K key, V value) {
+
+		System.out.println("Before Shift and del cURRE"+currentNode.ToString()+currentNode.ToPointers());
+		int i = 0;
+		int currentIndex = 0;
+
+		// Delete of Key
+		for (i = 0; i < currentNode.numberOfKeys; i++) 
+			if (currentNode.keys[i] == key) { // Key found in the node.
+				currentNode.keys[i] = null; // Delete the key
+				
+				currentIndex = i; // Storing the Index of deletion, to be used
+			}					// for shifting
+			
+		shift(currentIndex,currentNode);
+		System.out.println("After Shift and del cURRE"+currentNode.ToString()+currentNode.ToPointers());
+
+		// N has only one child & only one child.
+		if (currentNode == root && noOfpointers(root) == 1) {
+			System.out.println(" N has only one child & only one child. Current Node/pointer"+currentNode.ToString()+currentNode.ToPointers()+root.ToString());
+			
+//			root.copy(currentNode, 0, currentNode.numberOfKeys);
+			
+			for (i = 0; i < currentNode.pointers.length; i++) {
+				if (currentNode.pointers[i] != null) // Checking for child. This will be the new root node.
+					root = (Node<K>)currentNode.pointers[i];
+			}
+			
+			
+			System.out.println(" N has only one B4 clear. Current Node/pointer"+currentNode.ToString()+currentNode.ToPointers()+root.ToString());
+			currentNode.clear();
+			System.out.println(" N has only one ATR clear one child. Current Nodepointers"+currentNode.ToString()+currentNode.ToPointers()+root.ToString());
+			// Few Pointers
+		} else if(noOfpointers(currentNode) < 2) {
+			System.out.println("Underflow LeafNode has FEW POINTERS/VALUES.");
+			
+			Node<K> parent = findParent(currentNode);
+//			System.out.println("Parent Node" + parent.ToString() + parent.ToPointers());
+//			System.out.println("Current Node" + currentNode.ToString() + currentNode.ToPointers());
+
+
+			// Find index position of current node in parent node.
+			int currentPointer = 0;
+			int siblingPointer = 0;
+			
+		}
+		
 	}
 
 }
