@@ -244,6 +244,19 @@ public void delete_key(Node<K> currentNode, K key, V value) {
 			int currentPointer = 0;
 			int siblingPointer = 0;
 			
+			// Get the position of N in parent.
+			for (int k = 0; k < parent.pointers.length; k++) {
+				if (parent.pointers[k] == currentNode) {
+					currentPointer = k;
+				}
+			}
+
+			System.out.println("Current Node Pointer Index" + currentPointer);
+			
+			K keyValue;
+			int k_pos=0;
+
+			
 		}
 		
 	}
